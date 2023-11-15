@@ -16,6 +16,8 @@ For example, use `Coder` plugin:
 java -jar XuanYuan.jar Coder -a Base64 -i 123 -m Encode
 ```
 
+> Scan plugin in `./plugins` folder.
+
 ### Specify Plugin File
 
 ```bash
