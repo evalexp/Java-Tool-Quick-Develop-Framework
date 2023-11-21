@@ -33,10 +33,12 @@ public class CommandContext implements IContext {
 
     private void parseArgs(String[] args) {
         CommandLineParser parser = new DefaultParser();
+        // print help
         if (args.length == 0 || args[0].toLowerCase().equals("-h") || args[0].toLowerCase().equals("--help")) {
             this.printHelp();
             System.exit(0);
         }
+        // support @ syntax
         if (args[0].startsWith("@")) {
             File file = new File(args[0].substring(1));
             try {
@@ -48,12 +50,14 @@ public class CommandContext implements IContext {
         }
         this.options.addOption(Option.builder("h").longOpt("help").desc("Print Help").build());
         try {
+            // fill component by input arguments
             CommandLine line = parser.parse(this.options, args);
             for (Map.Entry<String, Pair<IComponent, String>> entry : this.components.entrySet()) {
                 if (line.hasOption(entry.getKey())) {
                     switch (entry.getValue().key().getClass().getName()) {
                         case "top.evalexp.tools.impl.component.Enumerate":
-                            ((Enumerate) entry.getValue().key()).setSelected(line.getOptionValue(entry.getKey()));
+                            if (!((Enumerate) entry.getValue().key()).setSelected(line.getOptionValue(entry.getKey())))
+                                throw new ParseException("Invalid selection for " + entry.getKey());
                             break;
                         case "top.evalexp.tools.impl.component.ListArg":
                             ((ListArg) entry.getValue().key()).setList(List.of(line.getOptionValue(entry.getKey()).split(",")));
@@ -92,7 +96,7 @@ public class CommandContext implements IContext {
 
     @Override
     public IComponent<Boolean> Switch(String label, String shortLabel, String description) {
-        this.options.addOption(Option.builder(shortLabel).longOpt(label).required().desc(String.format(this.DEFAULT_VALUE_TEMPLATE, description, "false")).build());
+        this.options.addOption(Option.builder(shortLabel).longOpt(label).required(false).desc(String.format(this.DEFAULT_VALUE_TEMPLATE, description, "false")).build());
         return this.keep(label, description, new Switch());
     }
 
@@ -104,7 +108,7 @@ public class CommandContext implements IContext {
 
     @Override
     public IComponent<List<String>> List(String label, String shortLabel, String description) {
-        this.options.addOption(Option.builder(shortLabel).longOpt(label).required().desc(description).argName("value1,value2,...").hasArg().build());
+        this.options.addOption(Option.builder(shortLabel).longOpt(label).required(false).desc(description).argName("value1,value2,...").hasArg().build());
         return this.keep(label, description, new ListArg());
     }
 

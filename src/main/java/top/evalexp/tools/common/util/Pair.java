@@ -1,5 +1,10 @@
 package top.evalexp.tools.common.util;
 
+/**
+ * Pair
+ * @param <K>
+ * @param <V>
+ */
 public class Pair<K, V> {
     private K key;
     private V value;

@@ -1,5 +1,8 @@
 package top.evalexp.tools.entity.plugin;
 
+/**
+ * Entity for plugin manifest
+ */
 public class Manifest {
     private String name;
     private String type;

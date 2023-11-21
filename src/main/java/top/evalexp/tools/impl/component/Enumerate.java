@@ -1,5 +1,6 @@
 package top.evalexp.tools.impl.component;
 
+import org.apache.commons.cli.ParseException;
 import top.evalexp.tools.interfaces.component.IComponent;
 import java.util.Map;
 
@@ -17,10 +18,14 @@ public class Enumerate<V> implements IComponent<V> {
 
     public Enumerate(Map<String, V> enums, String defaultSelected) {
         this(enums);
-        this.setSelected(defaultSelected);
+        if (this.enums.containsKey(defaultSelected))    this.value = this.enums.get(defaultSelected);
     }
 
-    public void setSelected(String key) {
-        this.value = this.enums.get(key);
+    public boolean setSelected(String key) throws ParseException {
+        if (this.enums.containsKey(key)) {
+            this.value = this.enums.get(key);
+            return true;
+        }
+        return false;
     }
 }

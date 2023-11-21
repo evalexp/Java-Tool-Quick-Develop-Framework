@@ -13,7 +13,13 @@ public class PluginClassLoader extends ClassLoader {
     private ClassLoader defaultClassLoader;
     private List<JarFile> jars = new ArrayList<>();
     private final String[] DEFAULT_LOAD_CLASS_PREFIX = new String[] {"top.evalexp", "java."};
-    private void construct(File[] jars) throws IOException {
+
+    /**
+     * initial class loader for jars
+     * @param jars
+     * @throws IOException
+     */
+    public PluginClassLoader(File[] jars) throws IOException {
         for (File jar : jars) {
             if (!jar.exists()) throw new FileNotFoundException();
             this.jars.add(new JarFile(jar));
@@ -21,20 +27,17 @@ public class PluginClassLoader extends ClassLoader {
         this.defaultClassLoader = Thread.currentThread().getContextClassLoader();
     }
 
-//    public PluginClassLoader(File[] jars) throws IOException {
-//        this.construct(jars);
-//    }
-
     public PluginClassLoader(File jar) throws IOException {
-        this.construct(new File[] {jar});
+        this(new File[] {jar});
     }
 
     public PluginClassLoader(String filename) throws IOException {
-        this.construct(new File[] {new File(filename)});
+        this(new File[] {new File(filename)});
     }
 
     @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        // load class by default loader, for core class
         for (String PREFIX : this.DEFAULT_LOAD_CLASS_PREFIX) {
             if (name.startsWith(PREFIX)) {
                 try {
@@ -42,9 +45,11 @@ public class PluginClassLoader extends ClassLoader {
                 } catch (ClassNotFoundException e) {}
             }
         }
+        // load class by jar
         try {
             return this.loadByPlugin(name);
         } catch (ClassNotFoundException e) {}
+        // not found in jar, load class by default loader
         return this.loadByDefault(name);
     }
 

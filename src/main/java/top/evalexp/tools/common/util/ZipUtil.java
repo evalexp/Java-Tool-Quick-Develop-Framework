@@ -11,6 +11,13 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 public class ZipUtil {
+    /**
+     * get file's data from a zip
+     * @param zipFile zip file object
+     * @param filename the file in zip, for example a/b/c/d.txt
+     * @return the file's data
+     * @throws IOException  when file not found or can't read
+     */
     public static byte[] getZipFile(File zipFile, String filename) throws IOException {
         if (!zipFile.exists()) throw new FileNotFoundException();
         ZipFile zip = new ZipFile(zipFile);
@@ -21,6 +28,11 @@ public class ZipUtil {
         return data;
     }
 
+    /**
+     * get plugin path by plugin's name
+     * @param name plugin name
+     * @return plugin path if exist
+     */
     public static String getPluginByPluginName(String name)  {
         File path = Paths.get(PathUtil.getCurrentPath(), "plugins").toFile();
         if (!path.exists()) return null;
