@@ -15,6 +15,7 @@ repositories {
 dependencies {
     implementation("commons-cli:commons-cli:1.6.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.16.0")
+    implementation("com.formdev:flatlaf:3.2.5")
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
@@ -31,7 +32,7 @@ tasks.jar {
 
 tasks.shadowJar {
     exclude("META-INF/**")
-    version = "1.0.1"
+    version = "1.0.2"
 }
 
 tasks.create<Zip>("generate_sdk") {
