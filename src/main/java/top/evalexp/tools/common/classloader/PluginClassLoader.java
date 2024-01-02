@@ -1,9 +1,11 @@
 package top.evalexp.tools.common.classloader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import top.evalexp.tools.common.util.ResourceUtil;
 import top.evalexp.tools.entity.plugin.Manifest;
 
 import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -33,6 +35,23 @@ public class PluginClassLoader extends ClassLoader {
 
     public PluginClassLoader(String filename) throws IOException {
         this(new File[] {new File(filename)});
+    }
+
+    @Override
+    public InputStream getResourceAsStream(String name) {
+        for (JarFile jar : jars) {
+            if (name.startsWith("/")) {
+                name = name.substring(1);
+            }
+            JarEntry entry = jar.getJarEntry(name);
+            if (entry != null) {
+                try {
+                    return jar.getInputStream(entry);
+                } catch (IOException e) {
+                }
+            }
+        }
+        return super.getResourceAsStream(name);
     }
 
     @Override
