@@ -43,7 +43,7 @@ public class CommandContext implements IContext {
             File file = new File(args[0].substring(1));
             try {
                 InputStream inputStream = new FileInputStream(file);
-                args = Arrays.stream(new String(inputStream.readAllBytes()).split("[\n| ]")).filter(s -> !s.equals("")).toArray(String[]::new);
+                args = Arrays.stream(new String(inputStream.readAllBytes()).split("[\n\r ]")).filter(s -> !s.equals("")).toArray(String[]::new);
             } catch (IOException e) {
                 System.out.println("[!] Error: Arguments file not found or can't read.");
             }

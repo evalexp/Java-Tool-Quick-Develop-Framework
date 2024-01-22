@@ -32,7 +32,7 @@ tasks.jar {
 
 tasks.shadowJar {
     exclude("META-INF/**")
-    version = "1.0.2"
+    version = "1.0.3"
 }
 
 tasks.create<Zip>("generate_sdk") {
@@ -41,6 +41,7 @@ tasks.create<Zip>("generate_sdk") {
     version = "1.0.0"
 
     from("src/main/java/")
+
 
     include("top/evalexp/tools/interfaces/**")
     include("top/evalexp/tools/impl/component/**")

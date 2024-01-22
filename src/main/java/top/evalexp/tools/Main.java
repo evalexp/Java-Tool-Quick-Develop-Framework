@@ -8,6 +8,7 @@ import top.evalexp.tools.entity.plugin.Manifest;
 import top.evalexp.tools.impl.plugin.CommandContext;
 import top.evalexp.tools.impl.plugin.CommandResult;
 import top.evalexp.tools.interfaces.plugin.IPlugin;
+import top.evalexp.tools.ui.GUI;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,11 +22,13 @@ public class Main {
                 initialGUI();
             else
                 initialCMD(args[0], Arrays.copyOfRange(args, 1, args.length));
-        }
+        } else initialCMD("-l", new String[]{});
     }
 
     public static void initialGUI() {
         // TODO:
+        GUI gui = new GUI();
+        gui.ui();
     }
 
     public static void initialCMD(String plugin, String[] args) {
@@ -37,8 +40,13 @@ public class Main {
             } else {
                 plugin = Paths.get(PathUtil.getCurrentPath(), plugin.substring(1)).toAbsolutePath().toString();
             }
+        } else if (plugin.toLowerCase().equals("--list") || plugin.toLowerCase().equals("-l")) {
+            String list_str = ZipUtil.getPluginList();
+            if (list_str != null && !list_str.equals("")) System.out.println(list_str);
+            else System.out.println("No plugin found.");
+            System.exit(0);
         } else {
-                plugin = ZipUtil.getPluginByPluginName(plugin);
+            plugin = ZipUtil.getPluginByPluginName(plugin);
         }
         if (plugin == null || !new File(plugin).exists()) {
             System.out.println(String.format("[!] Error: Plugin \"%s\" not found.", origin_name));
