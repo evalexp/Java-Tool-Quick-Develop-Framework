@@ -3,6 +3,7 @@ package top.evalexp.tools.impl.plugin;
 import org.apache.commons.cli.*;
 import top.evalexp.tools.common.util.Pair;
 import top.evalexp.tools.common.util.PathUtil;
+import top.evalexp.tools.common.util.ResourceUtil;
 import top.evalexp.tools.impl.component.Enumerate;
 import top.evalexp.tools.impl.component.ListArg;
 import top.evalexp.tools.impl.component.Switch;
@@ -43,7 +44,7 @@ public class CommandContext implements IContext {
             File file = new File(args[0].substring(1));
             try {
                 InputStream inputStream = new FileInputStream(file);
-                args = Arrays.stream(new String(inputStream.readAllBytes()).split("[\n\r ]")).filter(s -> !s.equals("")).toArray(String[]::new);
+                args = Arrays.stream(new String(ResourceUtil.readAllBytes(inputStream)).split("[\n\r ]")).filter(s -> !s.equals("")).toArray(String[]::new);
             } catch (IOException e) {
                 System.out.println("[!] Error: Arguments file not found or can't read.");
             }
@@ -54,20 +55,15 @@ public class CommandContext implements IContext {
             CommandLine line = parser.parse(this.options, args);
             for (Map.Entry<String, Pair<IComponent, String>> entry : this.components.entrySet()) {
                 if (line.hasOption(entry.getKey())) {
-                    switch (entry.getValue().key().getClass().getName()) {
-                        case "top.evalexp.tools.impl.component.Enumerate":
-                            if (!((Enumerate) entry.getValue().key()).setSelected(line.getOptionValue(entry.getKey())))
-                                throw new ParseException("Invalid selection for " + entry.getKey());
-                            break;
-                        case "top.evalexp.tools.impl.component.ListArg":
-                            ((ListArg) entry.getValue().key()).setList(List.of(line.getOptionValue(entry.getKey()).split(",")));
-                            break;
-                        case "top.evalexp.tools.impl.component.Switch":
-                            ((Switch) entry.getValue().key()).doSwitch();
-                            break;
-                        case "top.evalexp.tools.impl.component.Text":
-                            ((Text) entry.getValue().key()).setText(line.getOptionValue(entry.getKey()));
-                            break;
+                    if (entry.getValue().key() instanceof Enumerate<?>) {
+                        if (!((Enumerate<?>) entry.getValue().key()).setSelected(line.getOptionValue(entry.getKey())))
+                            throw new ParseException("Invalid selection for " + entry.getKey());
+                    } else if (entry.getValue().key() instanceof ListArg) {
+                        ((ListArg) entry.getValue().key()).setList(Arrays.asList(line.getOptionValue(entry.getKey()).split(",")));
+                    } else if (entry.getValue().key() instanceof Switch) {
+                        ((Switch) entry.getValue().key()).doSwitch();
+                    } else if (entry.getValue().key() instanceof Text) {
+                        ((Text) entry.getValue().key()).setText(line.getOptionValue(entry.getKey()));
                     }
                 }
             }

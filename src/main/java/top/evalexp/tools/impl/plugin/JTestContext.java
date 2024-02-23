@@ -1,6 +1,5 @@
 package top.evalexp.tools.impl.plugin;
 
-import org.apache.commons.cli.ParseException;
 import top.evalexp.tools.impl.component.Enumerate;
 import top.evalexp.tools.impl.component.ListArg;
 import top.evalexp.tools.impl.component.Switch;
@@ -14,7 +13,7 @@ import java.util.Map;
 
 public class JTestContext implements IContext {
 
-    public static <V> void setValue(Object target, String memberName, V value) throws NoSuchFieldException, IllegalAccessException, ParseException {
+    public static <V> void setValue(Object target, String memberName, V value) throws NoSuchFieldException, IllegalAccessException {
         Field field = target.getClass().getDeclaredField(memberName);
         field.setAccessible(true);
         IComponent component = (IComponent) field.get(target);
@@ -25,8 +24,7 @@ public class JTestContext implements IContext {
         } else if (component instanceof Switch && value instanceof Boolean) {
             ((Switch) component).doSwitch();
         } else if (component instanceof Enumerate && value instanceof String) {
-            if (!((Enumerate) component).setSelected((String) value))
-                throw new ParseException("Invalid selection");
+            ((Enumerate) component).setSelected((String) value);
         }
     }
 

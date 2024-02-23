@@ -10,6 +10,22 @@ public class Manifest {
     private String author;
     private String version;
     private String description;
+    private String path;
+
+    public String getByIndex(int index) {
+        switch (index) {
+            case 0:
+                return name;
+            case 1:
+                return author;
+            case 2:
+                return version;
+            case 3:
+                return description;
+            default:
+                return null;
+        }
+    }
 
     public String getName() {
         return name;
@@ -57,6 +73,14 @@ public class Manifest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     @Override

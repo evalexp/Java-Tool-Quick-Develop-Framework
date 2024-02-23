@@ -2,7 +2,6 @@ package top.evalexp.tools.common.util;
 
 import top.evalexp.tools.Main;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 

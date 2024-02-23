@@ -48,6 +48,14 @@ Then pass it like this :
 java -jar XuanYuan.jar Coder @/tmp/args.txt
 ```
 
+### GUI Mode
+
+```bash
+java -jar XuanYuan.jar -Gui
+```
+
+> Auto scan `./plugins` folder to display plugin list.
+
 ## How to develop a plugin
 
 ### Dependence

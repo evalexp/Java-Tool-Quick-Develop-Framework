@@ -7,6 +7,8 @@ plugins {
 
 group = "top.evalexp.tools"
 version = "1.0-SNAPSHOT"
+var sdk_version = "1.0.0"
+var release_version = "1.2.0"
 
 repositories {
     mavenCentral()
@@ -16,6 +18,7 @@ dependencies {
     implementation("commons-cli:commons-cli:1.6.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.16.0")
     implementation("com.formdev:flatlaf:3.2.5")
+    implementation("com.miglayout:miglayout:+")
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
@@ -32,13 +35,13 @@ tasks.jar {
 
 tasks.shadowJar {
     exclude("META-INF/**")
-    version = "1.0.3"
+    version = release_version
 }
 
-tasks.create<Zip>("generate_sdk") {
+tasks.create<Zip>("generate_sdk_src") {
 
     archiveBaseName = "XuanYuanSDK"
-    version = "1.0.0"
+    archiveVersion = sdk_version + "-src"
 
     from("src/main/java/")
 
@@ -46,4 +49,22 @@ tasks.create<Zip>("generate_sdk") {
     include("top/evalexp/tools/interfaces/**")
     include("top/evalexp/tools/impl/component/**")
     include("top/evalexp/tools/impl/plugin/JTest*")
+}
+
+tasks.create<Jar>("generate_sdk_jar") {
+    archiveBaseName = "XuanYuanSDK"
+    archiveVersion = sdk_version
+
+    from("build/classes/java/main")
+    include("top/evalexp/tools/interfaces/**")
+    include("top/evalexp/tools/impl/component/**")
+    include("top/evalexp/tools/impl/plugin/JTest*")
+
+    dependsOn(tasks.compileJava)
+}
+
+tasks.create("build_all") {
+    dependsOn(tasks.getByName("generate_sdk_src"))
+    dependsOn(tasks.getByName("generate_sdk_jar"))
+    dependsOn(tasks.shadowJar)
 }

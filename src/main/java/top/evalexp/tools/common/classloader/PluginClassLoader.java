@@ -1,11 +1,11 @@
 package top.evalexp.tools.common.classloader;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import top.evalexp.tools.common.util.ResourceUtil;
-import top.evalexp.tools.entity.plugin.Manifest;
 
-import java.io.*;
-import java.net.URL;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -79,7 +79,11 @@ public class PluginClassLoader extends ClassLoader {
     private Class<?> loadByPlugin(String name) throws ClassNotFoundException{
         byte[] classBytes = this.getClassBytes(name);
         if (classBytes != null && classBytes.length != 0) {
-            return this.defineClass(classBytes, 0, classBytes.length);
+            try {
+                return this.defineClass(classBytes, 0, classBytes.length);
+            } catch (UnsupportedClassVersionError e) {
+                return UnsupportedClassVersionError.class;
+            }
         }
         throw new ClassNotFoundException();
     }
@@ -89,12 +93,20 @@ public class PluginClassLoader extends ClassLoader {
             JarEntry entry = jar.getJarEntry(name.replaceAll("\\.", "/") + ".class");
             if (entry != null) {
                 try {
-                    return jar.getInputStream(entry).readAllBytes();
+                    return ResourceUtil.readAllBytes(jar.getInputStream(entry));
                 } catch (IOException e) {
                     return new byte[] {};
                 }
             }
         }
         return new byte[]{};
+    }
+
+    public void exit() {
+        for (JarFile jarFile : this.jars) {
+            try {
+                jarFile.close();
+            } catch (IOException e) {}
+        }
     }
 }
