@@ -6,7 +6,6 @@ import javax.swing.*;
 
 public class GUIResult implements IResult {
     private JTextArea component;
-    private final StringBuffer stringBuffer = new StringBuffer();
     public void setOutputComponent(JTextArea component) {
         this.component = component;
     }
@@ -17,8 +16,7 @@ public class GUIResult implements IResult {
      */
     @Override
     public void write(String s) {
-        this.stringBuffer.append(s);
-        this.component.setText(this.stringBuffer.toString());
+        this.component.append(s);
     }
 
     /**
@@ -27,8 +25,6 @@ public class GUIResult implements IResult {
      */
     @Override
     public void writeln(String s) {
-        this.stringBuffer.append(s);
-        this.stringBuffer.append("\n");
-        this.component.setText(this.stringBuffer.toString());
+        this.component.append(s + "\n");
     }
 }

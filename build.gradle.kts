@@ -8,7 +8,7 @@ plugins {
 group = "top.evalexp.tools"
 version = "1.0-SNAPSHOT"
 var sdk_version = "1.0.0"
-var release_version = "1.2.0"
+var release_version = "1.2.1"
 
 repositories {
     mavenCentral()
@@ -41,7 +41,7 @@ tasks.shadowJar {
 tasks.create<Zip>("generate_sdk_src") {
 
     archiveBaseName = "XuanYuanSDK"
-    archiveVersion = sdk_version + "-src"
+    archiveVersion = "$sdk_version-src"
 
     from("src/main/java/")
 

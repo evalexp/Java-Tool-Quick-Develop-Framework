@@ -17,9 +17,15 @@ import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -195,6 +201,49 @@ public class GUIContext implements IContext {
             public void changedUpdate(DocumentEvent e) {
 
             }
+        });
+        area.getActionMap().put(TransferHandler.getCutAction().getValue(Action.NAME), TransferHandler.getCutAction());
+        area.getActionMap().put(TransferHandler.getCopyAction().getValue(Action.NAME), TransferHandler.getCopyAction());
+        area.getActionMap().put(TransferHandler.getPasteAction().getValue(Action.NAME), TransferHandler.getPasteAction());
+
+        area.setTransferHandler(new TransferHandler() {
+            @Override
+            public int getSourceActions(JComponent c) {
+                return COPY_OR_MOVE;
+            }
+
+            @Override
+            protected Transferable createTransferable(JComponent c) {
+                return new StringSelection(area.getSelectedText());
+            }
+
+            @Override
+            protected void exportDone(JComponent source, Transferable data, int action) {
+                if (action == MOVE) area.replaceSelection("");
+            }
+
+            @Override
+            public boolean importData(TransferSupport support) {
+                if (!canImport(support)) return false;
+                try {
+                    if (support.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                        String data = (String) support.getTransferable().getTransferData(DataFlavor.stringFlavor);
+                        area.replaceSelection(data);
+                    } else if (support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                        List<File> files = (List<File>) support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+                        if (!files.isEmpty()) {
+                            area.setText(files.get(0).getAbsolutePath());
+                        }
+                    }
+                    return true;
+                } catch (Exception ignored) {return false;}
+            }
+
+            @Override
+            public boolean canImport(TransferSupport support) {
+                return support.isDataFlavorSupported(DataFlavor.stringFlavor) || (support.isDrop() && support.isDataFlavorSupported(DataFlavor.javaFileListFlavor));
+            }
+
         });
         area.setLineWrap(true);
         area.setRows(2);
