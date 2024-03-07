@@ -59,7 +59,7 @@ java -jar framework.jar -Gui
 ## How to develop a plugin
 
 ### Dependence
-In this repo, download the `Framework-$VERSION.zip`, and extra it into your src folder.
+In this repo, download the `JTQDF-SDK-$VERSION-src.zip`, and extra it into your src folder.
 
 ### Manifest
 
