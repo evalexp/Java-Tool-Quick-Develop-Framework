@@ -1,2 +1,2 @@
-rootProject.name = "xuanyuan"
+rootProject.name = "Java Tool Quick Develop Framework"
 

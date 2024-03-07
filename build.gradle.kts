@@ -8,6 +8,7 @@ plugins {
 group = "top.evalexp.tools"
 version = "1.0-SNAPSHOT"
 var sdk_version = "1.0.0"
+var sdk_name = "JTQDF-SDK"
 var release_version = "1.2.1"
 
 repositories {
@@ -36,11 +37,12 @@ tasks.jar {
 tasks.shadowJar {
     exclude("META-INF/**")
     version = release_version
+    archiveFileName = "framework-${version}.jar"
 }
 
 tasks.create<Zip>("generate_sdk_src") {
 
-    archiveBaseName = "XuanYuanSDK"
+    archiveBaseName = sdk_name
     archiveVersion = "$sdk_version-src"
 
     from("src/main/java/")
@@ -52,7 +54,7 @@ tasks.create<Zip>("generate_sdk_src") {
 }
 
 tasks.create<Jar>("generate_sdk_jar") {
-    archiveBaseName = "XuanYuanSDK"
+    archiveBaseName = sdk_name
     archiveVersion = sdk_version
 
     from("build/classes/java/main")

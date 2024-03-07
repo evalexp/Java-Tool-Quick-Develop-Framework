@@ -33,7 +33,7 @@ public class MainForm extends JFrame {
         // display on the center
         this.setLocationRelativeTo(null);
         this.setIconImage(new ImageIcon(ResourceUtil.getResource("images/icon/logo.png")).getImage());
-        this.setTitle("XuanYuan");
+        this.setTitle("JTQDF");
         // prevent window close
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {

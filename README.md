@@ -1,33 +1,33 @@
-# XuanYuan
+# Java Tool Quick Develop Framework
 
-> XuanYuan is a framework for Fast Java Tool Development.
+> JTQDF is a framework for Fast Java Tool Development.
 
 ## How to use
 
 ### Auto scan
 
 ```bash
-java -jar XuanYuan.jar Plugin_Name [args...]
+java -jar framework.jar tool_Name [args...]
 ```
 
-For example, use `Coder` plugin:
+For example, use tool `Coder`:
 
 ```bash
-java -jar XuanYuan.jar Coder -a Base64 -i 123 -m Encode
+java -jar framework.jar Coder -a Base64 -i 123 -m Encode
 ```
 
-> Scan plugin in `./plugins` folder.
+> Tool would be loaded as plugin and would be scan in `./plugins` folder.
 
 ### Specify Plugin File
 
 ```bash
-java -jar XuanYuan.jar @Plugin_Path [args...]
+java -jar framework.jar @Plugin_Path [args...]
 ```
 
-For example, use `Coder` plugin which is in `/tmp/coder/`:
+For example, use `Coder` which is in `/tmp/coder/`:
 
 ```bash
-java -jar XuanYuan.jar @/tmp/coder/Coder.jar -a Base64 -i 123 -m Encode
+java -jar framework.jar @/tmp/coder/Coder.jar -a Base64 -i 123 -m Encode
 ```
 
 ### @ Syntax Support
@@ -45,21 +45,21 @@ For example, save content in `/tmp/args.txt`:
 Then pass it like this :
 
 ```bash
-java -jar XuanYuan.jar Coder @/tmp/args.txt
+java -jar framework.jar Coder @/tmp/args.txt
 ```
 
 ### GUI Mode
 
 ```bash
-java -jar XuanYuan.jar -Gui
+java -jar framework.jar -Gui
 ```
 
-> Auto scan `./plugins` folder to display plugin list.
+> Auto scan `./plugins` folder to display tool list.
 
 ## How to develop a plugin
 
 ### Dependence
-In this repo, download the `XuanYuanSDK-$VERSION.zip`, and extra it into your src folder.
+In this repo, download the `Framework-$VERSION.zip`, and extra it into your src folder.
 
 ### Manifest
 
@@ -188,4 +188,4 @@ public void test() throws NoSuchFieldException, IllegalAccessException {
 
 ### Plugin Example
 
-* [Coder - XuanYuan Plugin](https://github.com/evalexp/Coder-XuanYuanPlugin)
+* [Coder - JTQDF Example](https://github.com/evalexp/Coder-JTQDF-Example)
